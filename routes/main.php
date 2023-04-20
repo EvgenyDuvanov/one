@@ -7,7 +7,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TestController;
 
 
-Route::view('/','home.index')->name('home');
+Route::view('/','welcome')->name('home');
 
 Route::redirect('/home', '/')->name('home.redierct');
 

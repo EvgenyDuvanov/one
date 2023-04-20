@@ -8,13 +8,16 @@ use Illuminate\Http\Request;
 
 class BookController extends Controller
 {
-    // public function __construct() {
-   
-    // }
-        
     public function index()
     {
-        return view('user.books.index');
+        $book = (object) [
+            'id' => 123,
+            'title' => 'Lorem ipsum dolor sit amet.',
+            'content' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum, dolorum?',
+        ];
+        $books = array_fill(0, 10, $book);
+
+        return view('user.books.index', compact('books'));
     }
 
     public function create()
@@ -22,28 +25,60 @@ class BookController extends Controller
         return view('user.books.create');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        return 'Запрос создания книг';
+       $validated = $request->validate([
+        'title' => ['required', 'string', 'max:100'],
+        'content' => ['required', 'string', 'max:10000'],
+       ]);
+
+        dd($validated);
+
+        // dd($title, $content);
+
+        session(['alert' => __('Книга создана!')]);
+
+
+        return redirect()->route('user.books.show', 123);
     }
 
     public function show($book)
     {
+        $book = (object) [
+            'id' => 123,
+            'title' => 'Lorem ipsum dolor sit amet.',
+            'content' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum, dolorum?',
+        ];
         return view('user.books.show', compact('book'));
     }
 
     public function edit($book)
     {
+        $book = (object) [
+            'id' => 123,
+            'title' => 'Lorem ipsum dolor sit amet.',
+            'content' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum, dolorum?',
+        ];
         return view('user.books.edit', compact('book'));
     }
 
-    public function update()
+    public function update(Request $request, $book)
     {
-        return 'Запрос изменения книг';
+        $validated = $request->validate([
+            'title' => ['required', 'string', 'max:100'],
+            'content' => ['required', 'string', 'max:10000'],
+        ]);
+
+    dd($validated);
+
+    session(['alert' => __('Изменения сохранены!')]);
+
+        return redirect()->back();
     }
 
-    public function delete()
+    public function delete($book)
     {
-        return "Запрос удаление книги";
+        return redirect()->route('user.books.show', $book);
+
     }
 }

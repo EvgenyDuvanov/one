@@ -16,3 +16,19 @@ if (! function_exists('active_link')) {
         return Route::is($name) ? $active : '';
     }
 }
+
+// if (! function_exists('alert')) {
+//     function alert(string $text)
+//     {
+//         session(['alert' => $text]);
+
+//     }
+// }
+
+if (! function_exists('validate')) {
+    function validate(array $attributes, array $rules): array
+    {
+       return validator($attributes, $rules)->validate();
+
+    }
+}

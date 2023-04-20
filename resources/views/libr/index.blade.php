@@ -2,13 +2,15 @@
 
 @section('page.title', 'Наши книги')
 
-@section('content')
+@section('main.content')
 
 <section>
         <x-title>
             {{ __('Список книг') }}
         </x-title>
-        
+
+        @include('libr.filter')
+
         @if(empty($books))
             {{ __('Нет ни одной книги.') }}     
          @else
