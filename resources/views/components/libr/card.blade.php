@@ -6,7 +6,8 @@
             </a>
         </h2>
        <div class="small text-muted">
-        {{ now()->format('d.m.Y H:i:s') }}
+        {{ $book->published_at->format('d.m.Y H:i:s') }}
        </div>
+       {{ $book->id }}
     </x-card-body> 
 </x-card>

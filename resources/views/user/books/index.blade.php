@@ -27,11 +27,11 @@
                         </h2>
 
                         <div class="small text-muted">
-                            {{ now()->format('d.m.Y H:i:s') }}
+                            {{ $book->published_at->format('d.m.Y H:i:s') }}
                         </div>
                     </div>
                 @endforeach
-            </div>
+                {{ $books->links() }}
         @endif
             </div>
         </div>

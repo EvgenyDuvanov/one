@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller
@@ -14,27 +15,29 @@ class RegisterController extends Controller
     public function store(Request $request)
 
     {
-        // $data = $request->all();
-        // $data = $request->only(['name','email']);
-        // $data = $request->except(['name','email']);
 
-        // $name = $request->input(['name']);
-        // $email = $request->input(['email']);
-        // $password = $request->input(['password']);
-        // $agreement = $request->boolean(['agreement']);
+    //    dd(User::query());
 
-        // // $remember = $request->boolean(['remember']);
-        // // $remember = $request->file(['remember']);
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'string', 'max:50', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:4', 'max:15', 'confirmed'],
+            'agreement' => ['accepted'],
+        ]);
+        
+        $user = User::query()->create([
+        'name' => $validated['name'],
+        'email' => $validated['email'],
+        'password' => bcrypt($validated['password']),
+        ]);
 
-        // // $email = $request->email;
+   // $user = new User;
+        // $user->name = $validated['name'];
+        // $user->email = $validated['email'];
+        // $user->password = bcrypt($validated['password']);
+        // $user->save();
 
-        // // dd($request->has('name')); //на определения параметра в форме
-        // // dd($request->filled('name')); //проверяет наличие параметра в запросе независимо от значения
-
-        // dd($name, $email, $password, $agreement);
-        if (true) {
-            return redirect()->back()->withInput();
-        }
+        session(['alert' => __('Добро пожаловать!')]);
 
         return redirect()->route('user');
     }

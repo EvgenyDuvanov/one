@@ -2,52 +2,52 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class LibrController extends Controller
 {
     public function index(Request $request)
     {
-    // $data = $request->all();
-    // dd($data);
-    $search = $request->input('search');
-    $category_id = $request->input('category_id');
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:50'],
+            'from_date' => ['nullable', 'string', 'date'],
+            'to_date' => ['nullable', 'string', 'date', 'after:from_date'],
+            'tag' => ['nullable', 'string', 'max:10'],
 
-    // dd($search, $category_id);
+        ]);
 
-        $book = (object) [
-            'id' => 123,
-            'title' => 'Lorem ipsum dolor sit amet.',
-            'content' => 'Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum, dolorum?',
-            'category_id' => 1,
-        ];
+        $query = Book::query()
+        ->where('published', true)
+        ->whereNotNull('published_at');
 
-        $books = array_fill(0, 10, $book);
+        if($search =  $validated['search'] ?? null) {
+            $query->where('title', 'like', "%{$search}%");
+        }
 
-        $books = array_filter($books, function ($book) use ($search, $category_id) {
-            if ($search && ! str_contains(strtolower($book->title), strtolower ($search))) {
-                    return false;
-            }
+        if($fromDate =  $validated['from_date'] ?? null) {
+            $query->where('published_at', '>=', new Carbon($fromDate));
+        }
 
-            if ($category_id && $book->category_id != $category_id) {
-                return false;
-            }
-            return true;
-        });
-       
-       $categories = [
-        null => __('Все категории'),
-        1 => __('Первая категория'), 
-        2 => __('Вторая категория')];
+        if($toDate =  $validated['to_date'] ?? null) {
+            $query->where('published_at', '<=', new Carbon($toDate));
+        }
 
-        return view('libr.index', compact('books', 'categories'));
+        if($tag =  $validated['tag'] ?? null) {
+            $query->whereJsonContains('tags', $tag);
+        }
+
+        $books = $query->latest('published_at')
+        ->paginate(9);
+        
+
+        return view('libr.index', compact('books'));
        
     }
 
-    public function show(Request $request)
+    public function show(Request $request, Book $book)
     {
-        
-
         return view('libr.show', compact('book'));
     }
 }

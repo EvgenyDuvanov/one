@@ -18,7 +18,12 @@
             <x-button-link href="{{ route('user.books.edit', $book->id) }}">
                 {{ __('Изменить') }}
             </x-button-link>
+
+            <x-button-link href="{{ route('user.books.destroy', $book->id) }}">
+                {{ __('Удалить') }}
+            </x-button-link>
         </x-slot>
+
     </x-title>
         
     <h2 class="h4">

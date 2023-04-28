@@ -11,7 +11,7 @@
 
         @include('libr.filter')
 
-        @if(empty($books))
+        @if($books->isEmpty())
             {{ __('Нет ни одной книги.') }}     
          @else
             <div class="row">
@@ -21,6 +21,7 @@
                     </div>
                 @endforeach
             </div>
+            {{ $books->links() }}
         @endif
             </div>
         </div>

@@ -18,6 +18,7 @@
 
     </x-card-header>
         <x-card-body>
+            <x-errors />
             <x-form action="{{ route('register.store') }}" method="POST">
                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                 <x-form-item>
